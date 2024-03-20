@@ -1,16 +1,14 @@
-package repositories;
+package org.example.repositories;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class RepositoryBase {
 
     private Connection conn;
 
-    private static final String url = "jdbc:mysql://database-anorth-1.rds.amazonaws.com:3306/mobileRrepaire_application";
+    private static final String url = "jdbc:mysql://localhost:3306/mobile";
     private static final String user = "root";
-    private static final String pass = "admin123";
+    private static final String pass = "Msn123@msn";
 
 
     public RepositoryBase() throws SQLException {
@@ -19,50 +17,92 @@ public class RepositoryBase {
     }
 
     private void createTables() throws SQLException {
-        var sql ="CREATE TABLE IF NOT EXISTS customers(\n" +
-                "customer_id INT PRIMARY KEY AUTO_INCREMENT,\n" +
-                "customer_name VARCHAR(255),\n" +
-                "customer_email VARCHAR(255),\n" +
-                "customer_contactno VARCHAR(255),\n" +
-                "customer_address VARCHAR(255);";
+        try (Statement statement = conn.createStatement()) {
+            // Check if customers table exists
+            ResultSet resultSet = conn.getMetaData().getTables(null, null, "customers", null);
+            if (!resultSet.next()) {
+                String sql = "CREATE TABLE customers (\n" +
+                        "    customerId INT PRIMARY KEY AUTO_INCREMENT,\n" +
+                        "    customerName VARCHAR(255),\n" +
+                        "    customerEmail VARCHAR(255),\n" +
+                        "    customerContactno VARCHAR(255),\n" +
+                        "    customerAddress VARCHAR(255)\n" +
+                        ")";
+                statement.execute(sql);
+            }
 
-        var sql1 =   "CREATE TABLE IF NOT EXISTS mobileDevice (\n" +
-                "\tmobileDevice_id INT PRIMARY KEY AUTO_INCREMENT ,\n" +
-                "customer_id INT NOT NULL,\n" +
-                "model VARCHAR(255) NOT NULL,\n" +
-                "serial_no VARCHAR(255) ,\n" +
-                "customer_mobile_image VARCHAR (255),\n" +
-                "FOREIGN KEY (customer_id) REFERENCES customers (customer_id); ";
+            // Similar checks for other tables
+            // Check if mobileDevice table exists
+            resultSet = conn.getMetaData().getTables(null, null, "mobileDevice", null);
+            if (!resultSet.next()) {
+                String sql1 = "CREATE TABLE mobileDevice (\n" +
+                        "    mobileDevice_id INT PRIMARY KEY AUTO_INCREMENT,\n" +
+                        "    customerId INT NOT NULL,\n" +
+                        "    model VARCHAR(255) NOT NULL,\n" +
+                        "    serialNo VARCHAR(255),\n" +
+                        "    customerMobileImage VARCHAR(255),\n" +
+                        "    FOREIGN KEY (customerId) REFERENCES customers (customerId)\n" +
+                        ")";
+                statement.execute(sql1);
+            }
 
-        var sql2 = "CREATE TABLE IF NOT EXISTS branch (\n" +
-                "\tbranch_id INT PRIMARY KEY AUTO_INCREMENT ,\n" +
-                "    branch_name VARCHAR(255) NOT NULL,\n" +
-                "    phoneno INT NOT NULL,\n" +
-                "    email VARCHAR(255) ,\n" +
-                "    address VARCHAR (255);";
+            // Similar checks for other tables
+            // Check if branch table exists
+            resultSet = conn.getMetaData().getTables(null, null, "branch", null);
+            if (!resultSet.next()) {
+                String sql2 = "CREATE TABLE branch (\n" +
+                        "    branchId INT PRIMARY KEY AUTO_INCREMENT,\n" +
+                        "    branchName VARCHAR(255) NOT NULL,\n" +
+                        "    phoneno INT NOT NULL,\n" +
+                        "    email VARCHAR(255),\n" +
+                        "    address VARCHAR(255)\n" +
+                        ")";
+                statement.execute(sql2);
+            }
 
-        var sql3 = "CREATE TABLE IF NOT EXISTS employees (\n" +
-                "\temployee_id INT PRIMARY KEY AUTO_INCREMENT ,\n" +
-                "    employee_name VARCHAR(255)NOT NULL,\n" +
-                "    branch_id INT NOT NULL,\n" +
-                "    phoneno INT NOT NULL,\n" +
-                "    email VARCHAR(255) ,\n" +
-                "    position VARCHAR (255);";
+            // Similar checks for other tables
+            // Check if employees table exists
+            resultSet = conn.getMetaData().getTables(null, null, "employees", null);
+            if (!resultSet.next()) {
+                String sql3 = "CREATE TABLE employees (\n" +
+                        "    employeeId INT PRIMARY KEY AUTO_INCREMENT,\n" +
+                        "    employeeName VARCHAR(255) NOT NULL,\n" +
+                        "    branchId INT NOT NULL,\n" +
+                        "    phoneno INT NOT NULL,\n" +
+                        "    email VARCHAR(255),\n" +
+                        "    position VARCHAR(255)\n" +
+                        ")";
+                statement.execute(sql3);
+            }
 
-
-
-
-               /* "CREATE TABLE IF NOT EXISTS furnitures(" +
-                "furniture_id INT AUTO_INCREMENT PRIMARY KEY, " +
-                "furniture_name VARCHAR(255) NOT NULL, " +
-                "furniture_type VARCHAR(255) NOT NULL);";*/
-
-
-
-        getConnection().createStatement().execute(sql);
+            // Similar checks for other tables
+            // Check if Invoice table exists
+            resultSet = conn.getMetaData().getTables(null, null, "Invoice", null);
+            if (!resultSet.next()) {
+                String sql4 = "CREATE TABLE Invoice (\n" +
+                        "    invoiceId INT NOT NULL PRIMARY KEY,\n" +
+                        "    customerId INT NOT NULL,\n" +
+                        "    deviceId INT NOT NULL,\n" +
+                        "    invoiceCreatedById INT NOT NULL,\n" +
+                        "    deviceAllocatedId INT,\n" +
+                        "    branchId INT NOT NULL,\n" +
+                        "    paymentmethod VARCHAR(255) NOT NULL,\n" +
+                        "    repaireCost INT NOT NULL,\n" +
+                        "    issuedDate DATE NOT NULL,\n" +
+                        "    deadline DATE NOT NULL,\n" +
+                        "    statuses VARCHAR(255) NOT NULL,\n" +
+                        "    FOREIGN KEY (customerId) REFERENCES customers(customerId),\n" +
+                        "    FOREIGN KEY (deviceId) REFERENCES mobileDevice(mobileDevice_id),\n" +
+                        "    FOREIGN KEY (invoiceCreatedById) REFERENCES employees(employeeId),\n" +
+                        "    FOREIGN KEY (branchId) REFERENCES branch(branchId)\n" +
+                        ")";
+                statement.execute(sql4);
+            }
+        }
     }
 
-    protected static Connection getConnection(){
+
+    protected Connection getConnection(){
         return conn;
     }
 }

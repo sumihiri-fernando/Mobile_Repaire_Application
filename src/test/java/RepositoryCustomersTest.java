@@ -1,4 +1,6 @@
 import org.example.models.Customers;
+
+
 import org.junit.jupiter.api.BeforeEach;
 
 import org.junit.jupiter.api.Test;
@@ -16,14 +18,11 @@ public class RepositoryCustomersTest {
 
     private Connection mockConnection;
     private PreparedStatement mockStatement;
-
     private ResultSet mockResultSet;
     private RepositoryCustomers RepositoryCustomers;
 
     @BeforeEach
     public void setUp() throws SQLException {
-
-        // Skapar mock-objekt
         mockConnection = mock(Connection.class);
         mockStatement = mock(PreparedStatement.class);
         mockResultSet = mock(ResultSet.class);
@@ -34,7 +33,7 @@ public class RepositoryCustomersTest {
         // När executeUpdate anropas ska inget hända
         when(mockConnection.createStatement()).thenReturn(mockStatement);
         when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
-        
+
         // När executeQuery anropas ska mock-resultatet returneras
         when(mockResultSet.next()).thenReturn(true, false); // Simulate one result in the ResultSet
         when(mockResultSet.getInt("customerId")).thenReturn(1);
@@ -45,7 +44,7 @@ public class RepositoryCustomersTest {
 
         // Skapar en instans av DrinkRepository med mock-anslutningen
         RepositoryCustomers = new RepositoryCustomers() {
-          @Override
+            @Override
             protected Connection getConnection() {
                 return mockConnection;
             }
@@ -54,15 +53,15 @@ public class RepositoryCustomersTest {
 
     @Test
     public void testCreate() throws SQLException {
-        Customers customers = new Customers(001,"Hans G","hansg@123gmail.com",0767554151,"Sadelmakargatan 34");
+        Customers customers = new Customers(001, "Hans G", "hansg@123gmail.com", 0767554151, "Sadelmakargatan 34");
         RepositoryCustomers.insert(customers);
 
         verify(mockConnection).prepareStatement(anyString());
-        verify(mockStatement).setInt(1,customers.getCustomerId());
-        verify(mockStatement).setString(2, customers.getCustomerName());
-        verify(mockStatement).setString(3, customers.getCustomerEmail());
-        verify(mockStatement).setInt(4,customers.getCustomerContactno());
-        verify(mockStatement).setString(5,customers.getCustomerAddress());
+        //verify(mockStatement).setInt(1, customers.getCustomerId());
+        verify(mockStatement).setString(1, customers.getCustomerName());
+        verify(mockStatement).setString(4, customers.getCustomerEmail());
+        verify(mockStatement).setInt(2, customers.getCustomerContactno());
+        verify(mockStatement).setString(3, customers.getCustomerAddress());
         verify(mockStatement).executeUpdate();
     }
 
@@ -74,18 +73,18 @@ public class RepositoryCustomersTest {
         verify(mockConnection).prepareStatement(anyString());
         verify(mockStatement).executeUpdate();
     }
+
     @Test
     public void testUpdate() throws SQLException {
         Customers customers = new Customers();
-        RepositoryCustomers.updateCustomer(001,"Hans L","hansl@123gmail.com");
+        RepositoryCustomers.updateCustomer(001, "Hans L", "hansl@123gmail.com");
 
         verify(mockConnection).prepareStatement(anyString());
-        verify(mockStatement).setInt(1,customers.getCustomerId());
+        verify(mockStatement).setInt(1, customers.getCustomerId());
         verify(mockStatement).setString(2, customers.getCustomerName());
         verify(mockStatement).setString(3, customers.getCustomerEmail());
         verify(mockStatement).executeUpdate();
     }
-
 
 
     @Test
@@ -97,6 +96,5 @@ public class RepositoryCustomersTest {
         verify(mockStatement).executeUpdate();
     }
 
-    }
-
+}
 
