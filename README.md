@@ -177,7 +177,7 @@ Double click on the connection to establish a connection to your AWS RDS MySQL d
 
 ## Setup Instructions
 
-1. Clone the repository: `git clone https://github.com/your/repository.git`jjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+1. Clone the repository: `git clone https://github.com/Distansakademin/dbh-vt24-inlamning-sumihiri-fernando.git
 2.
   
 3. Set up environment variables for database connection and AWS S3 credentials.
