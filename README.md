@@ -6,9 +6,9 @@ This project aims to develop a comprehensive program for a mobile repair company
 
 1. **Database Model Design:** Designed a suitable database schema with five tables in the MySQL workbench:`Customers`,`MobileDevices`,`Employees`,`Branch`and `Invoice`.
 2. **Database Creation:** Set up the database on AWS RDS, utilizing MySQL workbench as the database engine.
-3. **Application Development:** Developed a web-based application using Django framework to allow users to CRUD all resources.hhhhhhhhhhhhhhhhhhhhhh
-4. **Testing:** Implemented unit tests using Django's testing framework to ensure correctness of CRUD operations against a mock database.hhhhhhhhhhhhhhhhhhhhh
-5. **Integration with AWS tdfffdfgtS3:** Added functionality to upload files (e.g., images of device damage) to AWS S3 and associated each file with a repair job or customer.hhhhhhhhhhhh
+3. **Application Development:** Developed a web-based application using Django framework to allow users to CRUD all resources.
+4. **Testing:** Implemented unit tests using Django's testing framework to ensure correctness of CRUD operations against a mock database.
+5. **Integration with AWS tdfffdfgtS3:** Added functionality to upload files (e.g., images of device damage) to AWS S3 and associated each file with a repair job or customer.
 6. **Documentation:** Documented the entire process, including database structure, program functions, and code structure.
 
 ## Database Structure
@@ -181,8 +181,8 @@ Double click on the connection to establish a connection to your AWS RDS MySQL d
 2.
   
 3. Set up environment variables for database connection and AWS S3 credentials.
-4. Run migrations: `python manage.py migrate`hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-5. Start the development server: `python manage.py runserver`ggggggggggggggggggggggggggg
+4. Run migrations: `python manage.py migrate`
+5. Start the development server: `python manage.py runserver`
 6. Access the application at `http://localhost:8000`
 
 ## Contributors
